@@ -1,8 +1,8 @@
 
 import selectors
-import sys  
-import asyncio  
-import aiohttp  
+import sys
+import asyncio
+import aiohttp
 import json
 
 async def main():
@@ -30,16 +30,9 @@ async def get_reddit_top(subreddit, client):
     print('DONE:', subreddit + '\n')
 
 #Since I am using python 3.8, which changed the EventLoop for asyncio
-#and aiohttp does not support it (https://github.com/aio-libs/aiohttp/issues/4324)
+#and aiohttp does not support it just yet (https://github.com/aio-libs/aiohttp/issues/4324)
 #I am changing the Event Loop type.
 #for python 3.7 or when aiohttp gets updated, 
-#asyncio.run(main()) is the way to go.
-selector = selectors.SelectSelector()
-loop = asyncio.SelectorEventLoop(selector)
-asyncio.set_event_loop(loop)
-#asyncio.run(main())
-try:
-	loop.run_until_complete(main())
-	loop.run_until_complete(asyncio.sleep(2.0))
-finally:
-	loop.close()
+#asyncio.run(main()) is the only line you need.
+asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+asyncio.run(main())
